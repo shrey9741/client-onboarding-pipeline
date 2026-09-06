@@ -1,0 +1,25 @@
+{
+  "files": [
+    {
+      "filename": "vendor_agreement.pdf",
+      "kind": "pdf",
+      "page_count": 3,
+      "total_chars": 3573,
+      "avg_chars_per_page": 1191.0,
+      "tables_detected": 0,
+      "text_density": "sparse"
+    },
+    {
+      "filename": "meeting_notes.md",
+      "kind": "text",
+      "char_count": 66,
+      "line_count": 2
+    }
+  ],
+  "summary": {
+    "total_files": 2,
+    "tabular_files": 0,
+    "pdf_files": 1,
+    "text_files": 1
+  }
+}

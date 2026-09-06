@@ -1,0 +1,4 @@
+ticket_id,customer_name,issue,status,opened_date
+T101,Rahul Verma,Late delivery,open,2026-08-21
+T102,Priya Singh,Damaged goods,closed,2026-08-19
+T103,,Wrong item shipped,open,2026-08-23

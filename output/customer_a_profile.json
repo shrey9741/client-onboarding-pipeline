@@ -1,0 +1,73 @@
+{
+  "files": [
+    {
+      "filename": "suppliers.csv",
+      "kind": "tabular",
+      "row_count": 5,
+      "column_count": 6,
+      "columns": [
+        "supplier_id",
+        "supplier_name",
+        "region",
+        "on_time_pct",
+        "avg_delay_days",
+        "last_shipment_date"
+      ],
+      "dtypes": {
+        "supplier_id": "str",
+        "supplier_name": "str",
+        "region": "str",
+        "on_time_pct": "float64",
+        "avg_delay_days": "float64",
+        "last_shipment_date": "str"
+      },
+      "null_pct_by_column": {
+        "supplier_id": 0.0,
+        "supplier_name": 0.0,
+        "region": 0.0,
+        "on_time_pct": 20.0,
+        "avg_delay_days": 0.0,
+        "last_shipment_date": 0.0
+      }
+    },
+    {
+      "filename": "tickets.csv",
+      "kind": "tabular",
+      "row_count": 3,
+      "column_count": 5,
+      "columns": [
+        "ticket_id",
+        "customer_name",
+        "issue",
+        "status",
+        "opened_date"
+      ],
+      "dtypes": {
+        "ticket_id": "str",
+        "customer_name": "str",
+        "issue": "str",
+        "status": "str",
+        "opened_date": "str"
+      },
+      "null_pct_by_column": {
+        "ticket_id": 0.0,
+        "customer_name": 33.33,
+        "issue": 0.0,
+        "status": 0.0,
+        "opened_date": 0.0
+      }
+    },
+    {
+      "filename": "notes.txt",
+      "kind": "text",
+      "char_count": 44,
+      "line_count": 2
+    }
+  ],
+  "summary": {
+    "total_files": 3,
+    "tabular_files": 2,
+    "pdf_files": 0,
+    "text_files": 1
+  }
+}
