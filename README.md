@@ -1,98 +1,91 @@
-# Client Onboarding Pipeline
+# 📥 Client Onboarding Pipeline — Auto-Adapting RAG Builder
 
-A config-driven tool that takes a **raw, messy folder of a client's data** (CSV, Excel, PDFs, plain text — whatever mix they hand you) and automatically:
+> Point it at any client's messy data dump. It figures out the rest.
 
-1. Detects and parses every file by type
-2. Profiles the data (row counts, null %, PDF density, table detection, etc.)
-3. *(in progress)* Auto-selects a chunking/retrieval strategy per file based on that profile
-4. *(planned)* Builds a RAG assistant over the data, wired through an LLM gateway
-5. *(planned)* Runs an automated evaluation (via [DetEval](#)) to produce a pass/fail reliability report before handoff
-6. *(planned)* Deploys the whole thing with one command (Docker)
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-Data%20Profiling-150458?style=flat-square&logo=pandas&logoColor=white)
+![pdfplumber](https://img.shields.io/badge/pdfplumber-PDF%20Parsing-8A2BE2?style=flat-square)
+![FAISS](https://img.shields.io/badge/FAISS-Vector%20Search-4B8BBE?style=flat-square)
+![DetEval](https://img.shields.io/badge/DetEval-Reliability%20Report-2E8B57?style=flat-square)
+![Docker](https://img.shields.io/badge/Docker-Deploy-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Week%201%20Complete-orange?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square)
 
-## Why this project exists
+---
 
-Most RAG demos assume one clean data source. Real onboarding — the kind a Forward Deployed Engineer or data analyst actually does — starts with a folder of inconsistent exports: some CSVs with missing values, a PDF vendor contract, a stray markdown file of meeting notes. This pipeline is built to prove that a system can **adapt automatically to whatever a new client hands you**, rather than being hand-tuned per project.
+## 📌 The Problem
 
-The same pipeline run unmodified against two structurally different customer folders should:
-- Parse every file correctly
-- Produce a distinct profile for each (because their data looks nothing alike)
-- Eventually produce a working, evaluated assistant for each
+Every new client hands you data in a different shape — a few messy CSVs, a PDF contract, a stray markdown file of meeting notes, always with missing values and inconsistent formatting. Most RAG demos assume one clean source. Real onboarding doesn't work that way, and hand-tuning a pipeline per client doesn't scale.
 
-## Current status: Week 1 — Ingestion & Auto-Detection ✅
+## 💡 The Solution
 
-Implemented and tested against two sample customer folders:
+This pipeline takes a **raw, unstructured client folder** and automatically:
+
+1. **Detects & parses** every file by type (CSV/Excel → pandas, PDF → pdfplumber, text → raw)
+2. **Profiles** the data — row counts, null %, PDF text density, table detection
+3. **Auto-configures** a chunking/retrieval strategy per file based on that profile *(Week 2)*
+4. **Builds a RAG assistant** over the data with source citations on every answer *(Week 3)*
+5. **Runs an automated eval** via DetEval to produce a pass/fail reliability report before handoff *(Week 4)*
+6. **Deploys with one command** via Docker *(Week 5)*
+
+The same pipeline, run unmodified on two structurally different client folders, should parse both correctly and produce a distinct, accurate profile for each — proving it adapts rather than being hand-tuned.
+
+---
+
+## 🏗️ Architecture
+
+```
+Raw client folder (CSV / Excel / PDF / TXT / MD)
+              │
+              ▼
+      ┌───────────────┐
+      │   router.py    │  classifies each file by type
+      └───────┬───────┘
+              ▼
+      ┌───────────────┐
+      │  parsers.py    │  tabular → DataFrame + schema
+      │                │  pdf     → per-page text + tables
+      │                │  text    → raw content
+      └───────┬───────┘
+              ▼
+      ┌───────────────┐
+      │  profiler.py   │  row/col counts, null %, dtypes,
+      │                │  PDF page density, table detection
+      └───────┬───────┘
+              ▼
+   output/<customer_id>_profile.json
+              │
+              ▼  Week 2 →  Week 3 →   Week 4    →  Week 5
+        auto-config    RAG + LLM   DetEval report   Docker
+        per file       gateway    (pass/fail)       one-command deploy
+```
+
+---
+
+## ✅ Current Status — Week 1: Ingestion & Auto-Detection
 
 | Customer | Data | What the profiler caught |
 |---|---|---|
-| `customer_a` | 2 CSVs (suppliers, tickets) + 1 text note | Missing `on_time_pct` value (20% null), missing `customer_name` in a ticket (33% null) |
-| `customer_b` | 1 PDF (vendor agreement, 3 pages) + 1 markdown note | Page count, average text density per page, table detection |
+| `customer_a` | 2 CSVs + 1 text note | 20% null in `on_time_pct`, 33% null in `customer_name` |
+| `customer_b` | 1 PDF (3 pages) + 1 markdown note | Page density, table detection, char counts |
 
-Roadmap for what's next is in [Roadmap](#roadmap) below.
+## 🗺️ Roadmap
 
-## Architecture
+- [x] **Week 1** — File routing, type-specific parsing, per-file profiling
+- [ ] **Week 2** — Auto-config: chunk size/strategy per file based on its profile
+- [ ] **Week 3** — FAISS + LLM gateway (fallback, cost tracking) + citations
+- [ ] **Week 4** — DetEval reliability report per client
+- [ ] **Week 5** — Docker one-command deploy + minimal UI
+- [ ] **Week 6** — Architecture write-up, tradeoffs, live demo on public data
 
-```
-Raw customer folder (CSV / Excel / PDF / TXT / MD)
-              │
-              ▼
-      ┌───────────────┐
-      │   router.py    │   classifies each file by extension/type
-      └───────┬───────┘
-              ▼
-      ┌───────────────┐
-      │  parsers.py    │   type-specific parsing:
-      │                │     - tabular -> pandas DataFrame + schema
-      │                │     - pdf     -> per-page text + table detection
-      │                │     - text    -> raw content
-      └───────┬───────┘
-              ▼
-      ┌───────────────┐
-      │  profiler.py   │   computes stats per file:
-      │                │     - tabular: row/col counts, dtypes, null %
-      │                │     - pdf: page count, text density, tables
-      │                │     - text: char/line counts
-      └───────┬───────┘
-              ▼
-    output/<customer_id>_profile.json
-              │
-              ▼ (Week 2, not yet built)
-      Auto-config: chunk size / strategy per file, based on profile
-              │
-              ▼ (Week 3, not yet built)
-      Embed -> FAISS -> LLM Gateway -> RAG answers with citations
-              │
-              ▼ (Week 4, not yet built)
-      DetEval reliability report per customer
-              │
-              ▼ (Week 5, not yet built)
-      Docker: one command to build + deploy a new customer's assistant
-```
+---
 
-## Project structure
-
-```
-client-onboarding-pipeline/
-├── ingestion/
-│   ├── __init__.py
-│   ├── router.py       # classifies files by type
-│   ├── parsers.py      # per-type parsing logic
-│   └── profiler.py     # per-file statistics/profiling
-├── samples/
-│   ├── customer_a/     # CSV-heavy sample data
-│   └── customer_b/     # PDF-heavy sample data
-├── output/              # generated profile JSON reports (git-ignored contents, folder kept)
-├── run_ingestion.py     # entry point: route -> parse -> profile -> save JSON
-├── requirements.txt
-└── README.md
-```
-
-## Setup
+## ⚙️ Setup
 
 ```bash
 git clone https://github.com/<your-username>/client-onboarding-pipeline.git
 cd client-onboarding-pipeline
 
-# (recommended) virtual environment
 python -m venv venv
 venv\Scripts\activate       # Windows
 source venv/bin/activate    # macOS/Linux
@@ -100,41 +93,36 @@ source venv/bin/activate    # macOS/Linux
 pip install -r requirements.txt
 ```
 
-## Usage
-
-Run the ingestion pipeline against any customer folder under `samples/`:
+## ▶️ Usage
 
 ```bash
 python run_ingestion.py samples/customer_a
 python run_ingestion.py samples/customer_b
 ```
 
-Each run prints:
-- A routing summary (which files were classified as tabular/PDF/text)
-- A per-file profile (row counts, null %, PDF density, etc.)
+Prints a routing summary + per-file profile, and saves a JSON report to `output/<customer_id>_profile.json`.
 
-...and saves a JSON report to `output/<customer_id>_profile.json`.
+Drop your own mix of `.csv`, `.xlsx`, `.pdf`, `.txt`, or `.md` into a new folder under `samples/` and point the script at it to test with real data.
 
-To test with your own data, drop any mix of `.csv`, `.xlsx`, `.pdf`, `.txt`, or `.md` files into a new folder under `samples/` and point the script at it:
+## 📂 Project Structure
 
-```bash
-python run_ingestion.py samples/my_new_customer
+```
+client-onboarding-pipeline/
+├── ingestion/
+│   ├── router.py       # file-type classification
+│   ├── parsers.py      # per-type parsing
+│   └── profiler.py     # per-file statistics
+├── samples/
+│   ├── customer_a/     # CSV-heavy sample
+│   └── customer_b/     # PDF-heavy sample
+├── output/              # generated profile JSON reports
+├── run_ingestion.py     # entry point
+├── requirements.txt
+└── README.md
 ```
 
-## Roadmap
+---
 
-- [x] **Week 1** — File routing, type-specific parsing, per-file profiling
-- [ ] **Week 2** — Auto-config: pick chunk size/strategy per file based on its profile (e.g. dense PDF → smaller overlapping chunks; tabular with high null % → flag for cleaning before embedding)
-- [ ] **Week 3** — Embed into FAISS, wire retrieval + answer synthesis through an LLM gateway (provider fallback, cost tracking), with source citations on every answer
-- [ ] **Week 4** — Automated evaluation loop (DetEval) run after each customer build, producing a pass/fail reliability report
-- [ ] **Week 5** — Dockerize so a new customer's assistant can be built and deployed with one command; minimal UI (upload → build → chat → eval report)
-- [ ] **Week 6** — Polish: architecture write-up, tradeoff notes, demo deployment on public sample data
-
-## Tech stack
-
-- **Parsing:** pandas, openpyxl, pdfplumber
-- **Planned:** FAISS (vector search), an LLM gateway for provider routing/fallback, DetEval for deterministic evaluation, Docker for deployment
-
-## License
+## 📄 License
 
 MIT
