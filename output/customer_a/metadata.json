@@ -1,0 +1,47 @@
+[
+  {
+    "source_file": "suppliers.csv",
+    "locator": "rows 0-0",
+    "text": "supplier_id: S001, supplier_name: Acme Logistics, region: North, on_time_pct: 92.5, avg_delay_days: 1.2, last_shipment_date: 2026-08-20"
+  },
+  {
+    "source_file": "suppliers.csv",
+    "locator": "rows 1-1",
+    "text": "supplier_id: S002, supplier_name: Bharat Freight, region: South, on_time_pct: 78.1, avg_delay_days: 4.8, last_shipment_date: 2026-08-25"
+  },
+  {
+    "source_file": "suppliers.csv",
+    "locator": "rows 2-2",
+    "text": "supplier_id: S003, supplier_name: Global Parts Co, region: East, on_time_pct: nan, avg_delay_days: 3.1, last_shipment_date: 2026-08-18"
+  },
+  {
+    "source_file": "suppliers.csv",
+    "locator": "rows 3-3",
+    "text": "supplier_id: S004, supplier_name: Speedy Movers, region: West, on_time_pct: 88.0, avg_delay_days: 2.0, last_shipment_date: 2026-08-22"
+  },
+  {
+    "source_file": "suppliers.csv",
+    "locator": "rows 4-4",
+    "text": "supplier_id: S005, supplier_name: Reliable Traders, region: South, on_time_pct: 65.4, avg_delay_days: 6.7, last_shipment_date: 2026-08-27"
+  },
+  {
+    "source_file": "tickets.csv",
+    "locator": "rows 0-0",
+    "text": "ticket_id: T101, customer_name: Rahul Verma, issue: Late delivery, status: open, opened_date: 2026-08-21"
+  },
+  {
+    "source_file": "tickets.csv",
+    "locator": "rows 1-1",
+    "text": "ticket_id: T102, customer_name: Priya Singh, issue: Damaged goods, status: closed, opened_date: 2026-08-19"
+  },
+  {
+    "source_file": "tickets.csv",
+    "locator": "rows 2-2",
+    "text": "ticket_id: T103, customer_name: nan, issue: Wrong item shipped, status: open, opened_date: 2026-08-23"
+  },
+  {
+    "source_file": "notes.txt",
+    "locator": "n/a",
+    "text": "Q3 Ops Notes: focus on South region delays.\n"
+  }
+]

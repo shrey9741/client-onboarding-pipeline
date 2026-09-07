@@ -1,0 +1,22 @@
+{
+  "configs": [
+    {
+      "filename": "vendor_agreement.pdf",
+      "kind": "pdf",
+      "strategy": "sliding_window",
+      "chunk_size": 1000,
+      "chunk_overlap": 150,
+      "has_tables": false,
+      "reason": "sparse text (1191 chars/page) -> chunk_size=1000, overlap=150"
+    },
+    {
+      "filename": "meeting_notes.md",
+      "kind": "text",
+      "strategy": "sliding_window",
+      "chunk_size": 800,
+      "chunk_overlap": 100,
+      "reason": "free-form text (66 chars) -> fixed chunk_size=800, overlap=100"
+    }
+  ],
+  "flagged_for_cleaning": []
+}

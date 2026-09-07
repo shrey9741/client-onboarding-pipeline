@@ -1,0 +1,6 @@
+pandas
+openpyxl
+pdfplumber
+scikit-learn
+faiss-cpu
+numpy

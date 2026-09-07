@@ -8,7 +8,7 @@
 ![FAISS](https://img.shields.io/badge/FAISS-Vector%20Search-4B8BBE?style=flat-square)
 ![DetEval](https://img.shields.io/badge/DetEval-Reliability%20Report-2E8B57?style=flat-square)
 ![Docker](https://img.shields.io/badge/Docker-Deploy-2496ED?style=flat-square&logo=docker&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Week%201%20Complete-orange?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Week%202%20Complete-orange?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square)
 
 ---
@@ -62,18 +62,23 @@ Raw client folder (CSV / Excel / PDF / TXT / MD)
 
 ---
 
-## ✅ Current Status — Week 1: Ingestion & Auto-Detection
+## ✅ Current Status — Week 2: Auto-Config, Chunking & Vector Index
 
-| Customer | Data | What the profiler caught |
+| Customer | Data | Auto-config decision |
 |---|---|---|
-| `customer_a` | 2 CSVs + 1 text note | 20% null in `on_time_pct`, 33% null in `customer_name` |
-| `customer_b` | 1 PDF (3 pages) + 1 markdown note | Page density, table detection, char counts |
+| `customer_a` | `suppliers.csv` | row-level chunking; **flagged for cleaning** (20% null in `on_time_pct`) |
+| `customer_a` | `tickets.csv` | row-level chunking; **flagged for cleaning** (33% null in `customer_name`) |
+| `customer_b` | `vendor_agreement.pdf` | sparse text → chunk_size=1000/overlap=150 (would be 500/100 if dense) |
+
+Each customer's chunks are embedded (TF-IDF) and indexed into a per-customer FAISS index. A sanity search confirms it retrieves correctly, e.g. `"delay"` surfaces the two worst-performing suppliers by `avg_delay_days`; `"penalty"` surfaces the exact contract clause in the PDF.
+
+> **Embedding note:** uses TF-IDF (scikit-learn) rather than a downloaded neural embedding model — dependency-light, fully offline, easy to swap for `sentence-transformers` later without touching the FAISS/retrieval layer.
 
 ## 🗺️ Roadmap
 
 - [x] **Week 1** — File routing, type-specific parsing, per-file profiling
-- [ ] **Week 2** — Auto-config: chunk size/strategy per file based on its profile
-- [ ] **Week 3** — FAISS + LLM gateway (fallback, cost tracking) + citations
+- [x] **Week 2** — Auto-config per file (chunk size/strategy, cleaning flags), chunking, TF-IDF + FAISS indexing
+- [ ] **Week 3** — LLM gateway wiring (fallback, cost tracking) + answer synthesis with citations
 - [ ] **Week 4** — DetEval reliability report per client
 - [ ] **Week 5** — Docker one-command deploy + minimal UI
 - [ ] **Week 6** — Architecture write-up, tradeoffs, live demo on public data
@@ -95,28 +100,41 @@ pip install -r requirements.txt
 
 ## ▶️ Usage
 
+**Week 1 — routing, parsing, profiling only:**
 ```bash
 python run_ingestion.py samples/customer_a
 python run_ingestion.py samples/customer_b
 ```
-
 Prints a routing summary + per-file profile, and saves a JSON report to `output/<customer_id>_profile.json`.
 
-Drop your own mix of `.csv`, `.xlsx`, `.pdf`, `.txt`, or `.md` into a new folder under `samples/` and point the script at it to test with real data.
+**Week 2 — full pipeline through a searchable index:**
+```bash
+python run_indexing.py samples/customer_a
+python run_indexing.py samples/customer_b
+```
+Runs routing → parsing → profiling → auto-config → chunking → embedding, and builds a FAISS index per customer. Also runs a quick sanity search against the freshly built index so you can see retrieval working end to end. Saves:
+- `output/<customer_id>_config.json` — auto-config decisions + reasons per file
+- `output/<customer_id>/index.faiss`, `vectorizer.pkl`, `metadata.json` — the searchable index
+
+Drop your own mix of `.csv`, `.xlsx`, `.pdf`, `.txt`, or `.md` into a new folder under `samples/` and point either script at it to test with real data.
 
 ## 📂 Project Structure
 
 ```
 client-onboarding-pipeline/
 ├── ingestion/
-│   ├── router.py       # file-type classification
-│   ├── parsers.py      # per-type parsing
-│   └── profiler.py     # per-file statistics
+│   ├── router.py        # file-type classification
+│   ├── parsers.py       # per-type parsing
+│   ├── profiler.py      # per-file statistics
+│   ├── auto_config.py   # picks chunk strategy/size per file from its profile
+│   ├── chunker.py       # implements each chunking strategy
+│   └── embedder.py      # TF-IDF embedding + FAISS index build/search
 ├── samples/
-│   ├── customer_a/     # CSV-heavy sample
-│   └── customer_b/     # PDF-heavy sample
-├── output/              # generated profile JSON reports
-├── run_ingestion.py     # entry point
+│   ├── customer_a/      # CSV-heavy sample
+│   └── customer_b/      # PDF-heavy sample
+├── output/               # profile/config JSON + per-customer FAISS indexes
+├── run_ingestion.py      # Week 1 entry point
+├── run_indexing.py       # Week 2 entry point
 ├── requirements.txt
 └── README.md
 ```
