@@ -15,8 +15,6 @@ Saves per customer:
     output/<customer_id>/metadata.json
 """
 
-
-
 import sys
 import json
 import os
