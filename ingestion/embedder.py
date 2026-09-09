@@ -62,8 +62,12 @@ def save_index(customer_id: str, index, vectorizer, metadata: List[Dict[str, Any
 
 def load_index(customer_id: str, output_dir: str = "output"):
     customer_dir = os.path.join(output_dir, customer_id)
+    index_path = os.path.join(customer_dir, "index.faiss")
 
-    index = faiss.read_index(os.path.join(customer_dir, "index.faiss"))
+    if not os.path.isfile(index_path):
+        raise FileNotFoundError(f"No FAISS index found for customer '{customer_id}' at {index_path}")
+
+    index = faiss.read_index(index_path)
 
     with open(os.path.join(customer_dir, "vectorizer.pkl"), "rb") as f:
         vectorizer = pickle.load(f)

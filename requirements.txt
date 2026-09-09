@@ -4,3 +4,7 @@ pdfplumber
 scikit-learn
 faiss-cpu
 numpy
+fastapi
+uvicorn
+requests
+python-dotenv
