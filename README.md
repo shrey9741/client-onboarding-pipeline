@@ -8,7 +8,7 @@
 ![FAISS](https://img.shields.io/badge/FAISS-Vector%20Search-4B8BBE?style=flat-square)
 ![DetEval](https://img.shields.io/badge/DetEval-Reliability%20Report-2E8B57?style=flat-square)
 ![Docker](https://img.shields.io/badge/Docker-Deploy-2496ED?style=flat-square&logo=docker&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Week%202%20Complete-orange?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Week%205%20Complete-orange?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square)
 
 ---
@@ -80,7 +80,7 @@ Each customer's chunks are embedded (TF-IDF) and indexed into a per-customer FAI
 - [x] **Week 2** — Auto-config per file (chunk size/strategy, cleaning flags), chunking, TF-IDF + FAISS indexing
 - [x] **Week 3** — LLM gateway client (Groq/OpenAI/Anthropic fallback), RAG answer synthesis with citations, FastAPI endpoint
 - [x] **Week 4** — Deterministic reliability checks (grounding, citation validity, relevance) + per-customer eval report
-- [ ] **Week 5** — Docker one-command deploy + minimal UI
+- [x] **Week 5** — Docker (API + Streamlit UI via docker-compose), one-command onboarding function, real functional UI (build → ask → eval)
 - [ ] **Week 6** — Architecture write-up, tradeoffs, live demo on public data
 
 ---
@@ -118,6 +118,33 @@ Runs routing → parsing → profiling → auto-config → chunking → embeddin
 
 Drop your own mix of `.csv`, `.xlsx`, `.pdf`, `.txt`, or `.md` into a new folder under `samples/` and point either script at it to test with real data.
 
+## 🐳 Running with Docker
+
+Build and run both the API and the Streamlit UI together:
+
+```bash
+docker-compose up --build
+```
+
+- API: `http://localhost:8000` (docs at `/docs`)
+- UI: `http://localhost:8501`
+
+Both containers read your Groq/OpenAI/Anthropic key from `.env` in the project root (never baked into the image). `output/` and `samples/` are mounted as volumes so indexes persist across container restarts.
+
+To build/run just the API:
+```bash
+docker build -t onboarding-api .
+docker run -p 8000:8000 --env-file .env onboarding-api
+```
+
+## 🖥️ Running the UI locally (without Docker)
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Upload a client's files (or click one of the sample-client buttons), watch the pipeline run live, then switch to the **Ask** tab to query it or the **Eval report** tab to run a reliability check — all wired to the real backend, nothing mocked.
+
 ## 📂 Project Structure
 
 ```
@@ -128,13 +155,24 @@ client-onboarding-pipeline/
 │   ├── profiler.py      # per-file statistics
 │   ├── auto_config.py   # picks chunk strategy/size per file from its profile
 │   ├── chunker.py       # implements each chunking strategy
-│   └── embedder.py      # TF-IDF embedding + FAISS index build/search
+│   ├── embedder.py      # TF-IDF embedding + FAISS index build/search
+│   ├── llm_client.py    # gateway-style LLM client (provider fallback, mock mode)
+│   └── assistant.py     # retrieval -> prompt -> LLM synthesis -> citations
+├── eval/
+│   └── deteval_checks.py  # deterministic grounding/citation/relevance checks
 ├── samples/
 │   ├── customer_a/      # CSV-heavy sample
 │   └── customer_b/      # PDF-heavy sample
-├── output/               # profile/config JSON + per-customer FAISS indexes
-├── run_ingestion.py      # Week 1 entry point
-├── run_indexing.py       # Week 2 entry point
+├── output/               # profile/config JSON, FAISS indexes, eval reports
+├── onboard.py            # one-command pipeline entry point (used by CLI + UI)
+├── api.py                # FastAPI endpoint
+├── streamlit_app.py      # real functional UI (build / ask / eval)
+├── run_ingestion.py       # Week 1 checkpoint
+├── run_indexing.py        # Week 2 checkpoint
+├── run_week3_checkpoint.py # Week 3 checkpoint
+├── run_eval_report.py     # Week 4 checkpoint
+├── Dockerfile
+├── docker-compose.yml
 ├── requirements.txt
 └── README.md
 ```
