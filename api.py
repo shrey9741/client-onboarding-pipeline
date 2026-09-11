@@ -41,6 +41,9 @@ def query_customer(customer_id: str, req: QueryRequest):
         )
 
     result = answer_question(req.question, index, vectorizer, metadata, llm_client=llm_client)
+    # context_chunks is internal (used by the eval pipeline) -- don't expose full
+    # retrieved text on every API response, citations are enough for the client.
+    result.pop("context_chunks", None)
     return result
 
 

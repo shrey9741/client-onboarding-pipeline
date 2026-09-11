@@ -50,5 +50,6 @@ def answer_question(question, index, vectorizer, metadata, llm_client=None, top_
         "question": question,
         "answer": answer_text,
         "citations": citations,
+        "context_chunks": chunks,
         "provider": provider,
     }

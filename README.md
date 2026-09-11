@@ -78,8 +78,8 @@ Each customer's chunks are embedded (TF-IDF) and indexed into a per-customer FAI
 
 - [x] **Week 1** — File routing, type-specific parsing, per-file profiling
 - [x] **Week 2** — Auto-config per file (chunk size/strategy, cleaning flags), chunking, TF-IDF + FAISS indexing
-- [ ] **Week 3** — LLM gateway wiring (fallback, cost tracking) + answer synthesis with citations
-- [ ] **Week 4** — DetEval reliability report per client
+- [x] **Week 3** — LLM gateway client (Groq/OpenAI/Anthropic fallback), RAG answer synthesis with citations, FastAPI endpoint
+- [x] **Week 4** — Deterministic reliability checks (grounding, citation validity, relevance) + per-customer eval report
 - [ ] **Week 5** — Docker one-command deploy + minimal UI
 - [ ] **Week 6** — Architecture write-up, tradeoffs, live demo on public data
 

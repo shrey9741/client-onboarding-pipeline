@@ -1,0 +1,858 @@
+{
+  "customer_a": {
+    "customer_id": "customer_a",
+    "total_questions": 10,
+    "passed": 10,
+    "pass_rate": 1.0,
+    "results": [
+      {
+        "question": "Which supplier has the worst on-time delivery percentage?",
+        "answer": "Based on the retrieved data: supplier_id: S002, supplier_name: Bharat Freight, region: South, on_time_pct: 78.1, avg_delay_days: 4.8, last_shipment_date: 2026-08-25",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.803,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.803 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.244,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.244 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 1-1"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 4-4"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 0-0"
+          }
+        ]
+      },
+      {
+        "question": "What is the average delay for Bharat Freight?",
+        "answer": "Based on the retrieved data: supplier_id: S002, supplier_name: Bharat Freight, region: South, on_time_pct: 78.1, avg_delay_days: 4.8, last_shipment_date: 2026-08-25",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.803,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.803 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.165,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.165 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 1-1"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 4-4"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 3-3"
+          }
+        ]
+      },
+      {
+        "question": "Which region has the most delayed suppliers?",
+        "answer": "Based on the retrieved data: Q3 Ops Notes: focus on South region delays.\n",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.311,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.311 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.11,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.110 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "notes.txt",
+            "locator": "n/a"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 4-4"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 1-1"
+          }
+        ]
+      },
+      {
+        "question": "Is there a supplier with missing on-time data?",
+        "answer": "Based on the retrieved data: supplier_id: S005, supplier_name: Reliable Traders, region: South, on_time_pct: 65.4, avg_delay_days: 6.7, last_shipment_date: 2026-08-27",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.803,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.803 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.244,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.244 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 4-4"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 1-1"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 3-3"
+          }
+        ]
+      },
+      {
+        "question": "What ticket involves a wrong item being shipped?",
+        "answer": "Based on the retrieved data: ticket_id: T103, customer_name: nan, issue: Wrong item shipped, status: open, opened_date: 2026-08-23",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.654,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.654 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.2,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.200 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "tickets.csv",
+            "locator": "rows 2-2"
+          },
+          {
+            "source_file": "tickets.csv",
+            "locator": "rows 0-0"
+          },
+          {
+            "source_file": "tickets.csv",
+            "locator": "rows 1-1"
+          }
+        ]
+      },
+      {
+        "question": "Which open ticket is about a late delivery?",
+        "answer": "Based on the retrieved data: ticket_id: T101, customer_name: Rahul Verma, issue: Late delivery, status: open, opened_date: 2026-08-21",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.654,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.654 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.2,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.200 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "tickets.csv",
+            "locator": "rows 0-0"
+          },
+          {
+            "source_file": "tickets.csv",
+            "locator": "rows 2-2"
+          },
+          {
+            "source_file": "tickets.csv",
+            "locator": "rows 1-1"
+          }
+        ]
+      },
+      {
+        "question": "What did the Q3 ops notes say to focus on?",
+        "answer": "Based on the retrieved data: Q3 Ops Notes: focus on South region delays.\n",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.311,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.311 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.411,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.411 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "notes.txt",
+            "locator": "n/a"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 1-1"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 4-4"
+          }
+        ]
+      },
+      {
+        "question": "Which supplier is in the West region?",
+        "answer": "Based on the retrieved data: supplier_id: S004, supplier_name: Speedy Movers, region: West, on_time_pct: 88.0, avg_delay_days: 2.0, last_shipment_date: 2026-08-22",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.782,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.782 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.233,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.233 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 3-3"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 4-4"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 1-1"
+          }
+        ]
+      },
+      {
+        "question": "What issue did Priya Singh report?",
+        "answer": "Based on the retrieved data: ticket_id: T102, customer_name: Priya Singh, issue: Damaged goods, status: closed, opened_date: 2026-08-19",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.625,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.625 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.171,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.171 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "tickets.csv",
+            "locator": "rows 1-1"
+          },
+          {
+            "source_file": "tickets.csv",
+            "locator": "rows 2-2"
+          },
+          {
+            "source_file": "tickets.csv",
+            "locator": "rows 0-0"
+          }
+        ]
+      },
+      {
+        "question": "How many tickets are currently open?",
+        "answer": "Based on the retrieved data: ticket_id: T103, customer_name: nan, issue: Wrong item shipped, status: open, opened_date: 2026-08-23",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.587,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.587 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.05,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.050 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "tickets.csv",
+            "locator": "rows 2-2"
+          },
+          {
+            "source_file": "tickets.csv",
+            "locator": "rows 0-0"
+          },
+          {
+            "source_file": "suppliers.csv",
+            "locator": "rows 4-4"
+          }
+        ]
+      }
+    ]
+  },
+  "customer_b": {
+    "customer_id": "customer_b",
+    "total_questions": 10,
+    "passed": 10,
+    "pass_rate": 1.0,
+    "results": [
+      {
+        "question": "What on-time delivery rate must vendors maintain?",
+        "answer": "Based on the retrieved data: Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to do so over two consecutive quarters\nmay result in contract review. Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to do so over two consecutive quarters\nmay result in contract review. Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to do so over two consecutive quarters\nmay result in contract review. Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to do so over two consecutive quarters\nmay result in contract review. Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to do so over two consecutive quarters\nmay result in contract review. Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.943,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.943 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.29,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.290 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 2"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 2"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 3"
+          }
+        ]
+      },
+      {
+        "question": "What happens if a vendor misses the SLA for two quarters?",
+        "answer": "Based on the retrieved data: Vendor Agreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors.",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.474,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.474 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.084,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.084 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 1"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 2"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 2"
+          }
+        ]
+      },
+      {
+        "question": "What is the penalty for a shipment more than 5 days late?",
+        "answer": "Based on the retrieved data: Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice va",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.987,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.987 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.208,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.208 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 3"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 3"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 1"
+          }
+        ]
+      },
+      {
+        "question": "How soon must damaged goods be reported after receipt?",
+        "answer": "Based on the retrieved data: e. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt.",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.696,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.696 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.333,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.333 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 3"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 3"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 1"
+          }
+        ]
+      },
+      {
+        "question": "What are the meeting notes about?",
+        "answer": "Based on the retrieved data: Meeting notes: renegotiate SLA terms with Acme by end of quarter.\n",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.22,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.220 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.188,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.188 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "meeting_notes.md",
+            "locator": "n/a"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 1"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 1"
+          }
+        ]
+      },
+      {
+        "question": "Which two parties are named in the vendor agreement?",
+        "answer": "Based on the retrieved data: Vendor Agreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors. Vendor\nAgreement Summary\nThis document outlines the terms of engagement between Acme Corp and its logistics vendors.",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.474,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.474 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.146,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.146 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 1"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 2"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 2"
+          }
+        ]
+      },
+      {
+        "question": "What section covers penalty clauses?",
+        "answer": "Based on the retrieved data: Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice va",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.756,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.756 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.249,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.249 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 3"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 3"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 2"
+          }
+        ]
+      },
+      {
+        "question": "What section covers service level expectations?",
+        "answer": "Based on the retrieved data: Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to do so over two consecutive quarters\nmay result in contract review. Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to do so over two consecutive quarters\nmay result in contract review. Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to do so over two consecutive quarters\nmay result in contract review. Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to do so over two consecutive quarters\nmay result in contract review. Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to do so over two consecutive quarters\nmay result in contract review. Section 2: Service Level Expectations\nVendors are expected to maintain a 95% on-time delivery rate. Failure to",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.763,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.763 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.205,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.205 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 2"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 2"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 3"
+          }
+        ]
+      },
+      {
+        "question": "Is the penalty applied per shipment or per invoice?",
+        "answer": "Based on the retrieved data: Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice value. Damaged goods must be reported within\n48 hours of receipt. Section 3: Penalty Clauses\nLate shipments beyond 5 days incur a 2% penalty on invoice va",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.987,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.987 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.117,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.117 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 3"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 3"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 1"
+          }
+        ]
+      },
+      {
+        "question": "By when should SLA terms be renegotiated?",
+        "answer": "Based on the retrieved data: Meeting notes: renegotiate SLA terms with Acme by end of quarter.\n",
+        "checks": [
+          {
+            "check": "grounding",
+            "passed": true,
+            "score": 0.258,
+            "threshold": 0.15,
+            "detail": "answer/context TF-IDF similarity 0.258 (>= threshold 0.15)"
+          },
+          {
+            "check": "citation_validity",
+            "passed": true,
+            "invalid_citations": [],
+            "detail": "all citations match indexed chunks"
+          },
+          {
+            "check": "relevance",
+            "passed": true,
+            "score": 0.17,
+            "threshold": 0.05,
+            "detail": "question/answer TF-IDF similarity 0.170 (>= threshold 0.05)"
+          }
+        ],
+        "overall_pass": true,
+        "provider": "mock",
+        "citations": [
+          {
+            "source_file": "meeting_notes.md",
+            "locator": "n/a"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 3"
+          },
+          {
+            "source_file": "vendor_agreement.pdf",
+            "locator": "page 1"
+          }
+        ]
+      }
+    ]
+  }
+}
