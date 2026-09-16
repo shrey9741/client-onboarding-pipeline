@@ -3,13 +3,17 @@
 > Point it at any client's messy data dump. It figures out the rest.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)
+![React](https://img.shields.io/badge/React-Vite%20%2B%20Tailwind-61DAFB?style=flat-square&logo=react&logoColor=black)
+![FastAPI](https://img.shields.io/badge/FastAPI-REST%20API-009688?style=flat-square&logo=fastapi&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-Data%20Profiling-150458?style=flat-square&logo=pandas&logoColor=white)
 ![pdfplumber](https://img.shields.io/badge/pdfplumber-PDF%20Parsing-8A2BE2?style=flat-square)
 ![FAISS](https://img.shields.io/badge/FAISS-Vector%20Search-4B8BBE?style=flat-square)
-![DetEval](https://img.shields.io/badge/DetEval-Reliability%20Report-2E8B57?style=flat-square)
+![Groq](https://img.shields.io/badge/Groq-LLaMA%203.1-F55036?style=flat-square)
 ![Docker](https://img.shields.io/badge/Docker-Deploy-2496ED?style=flat-square&logo=docker&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Week%205%20Complete-orange?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Week%206%20(Polish)-orange?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square)
+
+**[🔗 Live demo](#) · Coming in Week 6**
 
 ---
 
@@ -23,12 +27,12 @@ This pipeline takes a **raw, unstructured client folder** and automatically:
 
 1. **Detects & parses** every file by type (CSV/Excel → pandas, PDF → pdfplumber, text → raw)
 2. **Profiles** the data — row counts, null %, PDF text density, table detection
-3. **Auto-configures** a chunking/retrieval strategy per file based on that profile *(Week 2)*
-4. **Builds a RAG assistant** over the data with source citations on every answer *(Week 3)*
-5. **Runs an automated eval** via DetEval to produce a pass/fail reliability report before handoff *(Week 4)*
-6. **Deploys with one command** via Docker *(Week 5)*
+3. **Auto-configures** a chunking/retrieval strategy per file based on that profile
+4. **Builds a RAG assistant** over the data with source citations on every answer
+5. **Runs deterministic reliability checks** (grounding, citation validity, relevance) before handoff
+6. **Deploys via Docker**, with a REST API any frontend can wire to — including the React dashboard shipped in this repo
 
-The same pipeline, run unmodified on two structurally different client folders, should parse both correctly and produce a distinct, accurate profile for each — proving it adapts rather than being hand-tuned.
+The same pipeline, run unmodified on two structurally different client folders, parses both correctly and produces a distinct, accurate config/profile for each — proving it adapts rather than being hand-tuned per client.
 
 ---
 
@@ -53,16 +57,43 @@ Raw client folder (CSV / Excel / PDF / TXT / MD)
       │                │  PDF page density, table detection
       └───────┬───────┘
               ▼
-   output/<customer_id>_profile.json
-              │
-              ▼  Week 2 →  Week 3 →   Week 4    →  Week 5
-        auto-config    RAG + LLM   DetEval report   Docker
-        per file       gateway    (pass/fail)       one-command deploy
+      ┌───────────────┐
+      │ auto_config.py │  picks chunk strategy/size per file,
+      │                │  flags data-quality issues
+      └───────┬───────┘
+              ▼
+      ┌───────────────┐
+      │  chunker.py    │  row-level (tabular) or sliding-window
+      │                │  (pdf/text) chunking
+      └───────┬───────┘
+              ▼
+      ┌───────────────┐
+      │  embedder.py   │  TF-IDF vectors → FAISS index per client
+      └───────┬───────┘
+              ▼
+      ┌───────────────┐      ┌──────────────────┐
+      │  assistant.py  │◄────│  llm_client.py     │  Groq → OpenAI →
+      │  retrieval +   │     │  provider fallback │  Anthropic → mock
+      │  prompt + cite │     └──────────────────┘
+      └───────┬───────┘
+              ▼
+      ┌───────────────┐
+      │deteval_checks.py│  grounding / citation validity /
+      │                │  relevance — deterministic, no LLM-judge
+      └───────┬───────┘
+              ▼
+      ┌───────────────┐      ┌──────────────────┐
+      │    api.py      │◄────│  React dashboard   │  client-onboarding-ui/
+      │  REST surface  │─────►  (build / config /  │  Vite + Tailwind
+      └───────────────┘      │  profile / ask)    │
+                              └──────────────────┘
 ```
 
 ---
 
-## ✅ Current Status — Week 2: Auto-Config, Chunking & Vector Index
+## ✅ Current Status
+
+All 6 pipeline stages are built and tested end-to-end (route → parse → profile → auto-config → chunk → embed/index), backed by a full REST API and a React frontend wired to real data — nothing in the UI is mocked.
 
 | Customer | Data | Auto-config decision |
 |---|---|---|
@@ -70,9 +101,14 @@ Raw client folder (CSV / Excel / PDF / TXT / MD)
 | `customer_a` | `tickets.csv` | row-level chunking; **flagged for cleaning** (33% null in `customer_name`) |
 | `customer_b` | `vendor_agreement.pdf` | sparse text → chunk_size=1000/overlap=150 (would be 500/100 if dense) |
 
-Each customer's chunks are embedded (TF-IDF) and indexed into a per-customer FAISS index. A sanity search confirms it retrieves correctly, e.g. `"delay"` surfaces the two worst-performing suppliers by `avg_delay_days`; `"penalty"` surfaces the exact contract clause in the PDF.
+A sanity search confirms retrieval works correctly, e.g. `"delay"` surfaces the two worst-performing suppliers by `avg_delay_days`; `"penalty"` surfaces the exact contract clause in the PDF. Every RAG answer ships with source citations (file + row/page), and every answer can be run through 3 deterministic reliability checks before you'd trust it in front of a client.
 
-> **Embedding note:** uses TF-IDF (scikit-learn) rather than a downloaded neural embedding model — dependency-light, fully offline, easy to swap for `sentence-transformers` later without touching the FAISS/retrieval layer.
+## 🧠 Design Decisions & Tradeoffs
+
+- **TF-IDF instead of a neural embedding model.** Dependency-light, fully offline, no model downloads — good enough to prove retrieval works correctly (verified against 20 test questions across both sample clients). The FAISS layer is embedding-agnostic, so swapping in `sentence-transformers` later only touches `embedder.py`.
+- **Deterministic eval checks instead of LLM-as-judge.** Grounding (TF-IDF similarity between answer and retrieved context), citation validity (do cited sources actually exist in the index), and relevance (does the answer engage with the question) are all plain, reproducible computations — no second LLM call, no judge-model bias, fully explainable in an interview.
+- **Provider fallback + mock mode in the LLM client.** Tries Groq → OpenAI → Anthropic in order; if no API key is configured, falls back to a deterministic mock answer built from the retrieved context. This kept the retrieval → prompt → citation plumbing fully testable offline before ever spending API credits.
+- **Auto-config is rule-based, not LLM-based.** Chunking decisions (row-level vs. sliding-window, chunk size, cleaning flags) come from simple, named thresholds on the profiling stats — deterministic and cheap, and the reasoning is directly inspectable (every decision ships with a plain-English `reason` string).
 
 ## 🗺️ Roadmap
 
@@ -80,12 +116,13 @@ Each customer's chunks are embedded (TF-IDF) and indexed into a per-customer FAI
 - [x] **Week 2** — Auto-config per file (chunk size/strategy, cleaning flags), chunking, TF-IDF + FAISS indexing
 - [x] **Week 3** — LLM gateway client (Groq/OpenAI/Anthropic fallback), RAG answer synthesis with citations, FastAPI endpoint
 - [x] **Week 4** — Deterministic reliability checks (grounding, citation validity, relevance) + per-customer eval report
-- [x] **Week 5** — Docker (API + Streamlit UI via docker-compose), one-command onboarding function, real functional UI (build → ask → eval)
-- [ ] **Week 6** — Architecture write-up, tradeoffs, live demo on public data
+- [x] **Week 5** — Docker, one-command onboarding function, full REST API surface (build/status/profile/config/query/eval)
+- [x] **Frontend** — React (Vite + Tailwind) dashboard: client directory, live build progress, Config/Profile/Ask tabs, wired entirely to real endpoints
+- [ ] **Week 6** — Live deployment (backend + frontend), demo video, this README's final pass
 
 ---
 
-## ⚙️ Setup
+## ⚙️ Setup (backend)
 
 ```bash
 git clone https://github.com/<your-username>/client-onboarding-pipeline.git
@@ -98,79 +135,98 @@ source venv/bin/activate    # macOS/Linux
 pip install -r requirements.txt
 ```
 
+Add a `.env` file in the project root with at least one LLM provider key (optional — falls back to mock mode without one):
+```
+GROQ_API_KEY=your-key-here
+```
+
 ## ▶️ Usage
 
-**Week 1 — routing, parsing, profiling only:**
+**Full pipeline via CLI (one command):**
 ```bash
-python run_ingestion.py samples/customer_a
-python run_ingestion.py samples/customer_b
+python onboard.py samples/customer_a
 ```
-Prints a routing summary + per-file profile, and saves a JSON report to `output/<customer_id>_profile.json`.
+Runs routing → parsing → profiling → auto-config → chunking → embedding, with live structured progress output, and saves everything to `output/`.
 
-**Week 2 — full pipeline through a searchable index:**
+**Run the API:**
 ```bash
-python run_indexing.py samples/customer_a
-python run_indexing.py samples/customer_b
+uvicorn api:app --reload
 ```
-Runs routing → parsing → profiling → auto-config → chunking → embedding, and builds a FAISS index per customer. Also runs a quick sanity search against the freshly built index so you can see retrieval working end to end. Saves:
-- `output/<customer_id>_config.json` — auto-config decisions + reasons per file
-- `output/<customer_id>/index.faiss`, `vectorizer.pkl`, `metadata.json` — the searchable index
+Interactive docs at `http://localhost:8000/docs` — every endpoint (including file upload) is testable directly in the browser.
 
-Drop your own mix of `.csv`, `.xlsx`, `.pdf`, `.txt`, or `.md` into a new folder under `samples/` and point either script at it to test with real data.
+**Run the reliability checkpoint (10 questions × 2 sample clients):**
+```bash
+python run_eval_report.py
+```
+Saves `output/eval_report.json` with a pass/fail breakdown per question.
+
+Drop your own mix of `.csv`, `.xlsx`, `.pdf`, `.txt`, or `.md` into a new folder under `samples/`, or upload through the React UI, to test with real data.
+
+## 🖥️ Setup (frontend)
+
+```bash
+cd client-onboarding-ui
+npm install
+npm run dev
+```
+Runs at `http://localhost:5173`. Requires the backend (`uvicorn api:app --reload`) running at `http://localhost:8000` — the API base URL is editable directly in the UI header if yours differs.
 
 ## 🐳 Running with Docker
-
-Build and run both the API and the Streamlit UI together:
 
 ```bash
 docker-compose up --build
 ```
 
-- API: `http://localhost:8000` (docs at `/docs`)
-- UI: `http://localhost:8501`
+API runs at `http://localhost:8000` (interactive docs at `/docs`). Reads your Groq/OpenAI/Anthropic key from `.env` in the project root (never baked into the image). `output/`, `samples/`, and `uploaded_clients/` are mounted as volumes so indexes persist across container restarts.
 
-Both containers read your Groq/OpenAI/Anthropic key from `.env` in the project root (never baked into the image). `output/` and `samples/` are mounted as volumes so indexes persist across container restarts.
-
-To build/run just the API:
+To build/run without compose:
 ```bash
 docker build -t onboarding-api .
 docker run -p 8000:8000 --env-file .env onboarding-api
 ```
 
-## 🖥️ Running the UI locally (without Docker)
+## 🔌 API Reference
 
-```bash
-streamlit run streamlit_app.py
-```
+The React dashboard wires to these — every response is real pipeline data, nothing mocked:
 
-Upload a client's files (or click one of the sample-client buttons), watch the pipeline run live, then switch to the **Ask** tab to query it or the **Eval report** tab to run a reliability check — all wired to the real backend, nothing mocked.
+| Method | Endpoint | Returns |
+|---|---|---|
+| `POST` | `/customers/{id}/build` | Upload files (multipart), starts the pipeline in the background |
+| `GET` | `/customers/{id}/status` | Live per-stage status (`route`/`parse`/`profile`/`config`/`chunk`/`index`), each `pending`/`running`/`done`, plus a `detail` string per stage |
+| `GET` | `/customers` | List of clients with a completed build |
+| `GET` | `/customers/{id}/profile` | Raw per-file profiling stats (row counts, null %, PDF density) |
+| `GET` | `/customers/{id}/config` | Auto-config decision + reason per file |
+| `POST` | `/customers/{id}/query` | `{"question": "..."}` → grounded answer + citations |
+| `POST` | `/customers/{id}/eval` | `{"question": "..."}` → grounding/citation/relevance check results |
+| `GET` | `/health` | `{"status": "ok"}` |
 
 ## 📂 Project Structure
 
 ```
 client-onboarding-pipeline/
 ├── ingestion/
-│   ├── router.py        # file-type classification
-│   ├── parsers.py       # per-type parsing
-│   ├── profiler.py      # per-file statistics
-│   ├── auto_config.py   # picks chunk strategy/size per file from its profile
-│   ├── chunker.py       # implements each chunking strategy
-│   ├── embedder.py      # TF-IDF embedding + FAISS index build/search
-│   ├── llm_client.py    # gateway-style LLM client (provider fallback, mock mode)
-│   └── assistant.py     # retrieval -> prompt -> LLM synthesis -> citations
+│   ├── router.py         # file-type classification
+│   ├── parsers.py        # per-type parsing
+│   ├── profiler.py       # per-file statistics
+│   ├── auto_config.py    # picks chunk strategy/size per file from its profile
+│   ├── chunker.py        # implements each chunking strategy
+│   ├── embedder.py       # TF-IDF embedding + FAISS index build/search
+│   ├── llm_client.py     # gateway-style LLM client (provider fallback, mock mode)
+│   └── assistant.py      # retrieval -> prompt -> LLM synthesis -> citations
 ├── eval/
-│   └── deteval_checks.py  # deterministic grounding/citation/relevance checks
+│   └── deteval_checks.py   # deterministic grounding/citation/relevance checks
 ├── samples/
-│   ├── customer_a/      # CSV-heavy sample
-│   └── customer_b/      # PDF-heavy sample
-├── output/               # profile/config JSON, FAISS indexes, eval reports
-├── onboard.py            # one-command pipeline entry point (used by CLI + UI)
-├── api.py                # FastAPI endpoint
-├── streamlit_app.py      # real functional UI (build / ask / eval)
-├── run_ingestion.py       # Week 1 checkpoint
-├── run_indexing.py        # Week 2 checkpoint
-├── run_week3_checkpoint.py # Week 3 checkpoint
-├── run_eval_report.py     # Week 4 checkpoint
+│   ├── customer_a/       # CSV-heavy sample
+│   └── customer_b/       # PDF-heavy sample
+├── output/                # profile/config JSON, FAISS indexes, eval reports
+├── client-onboarding-ui/  # React (Vite + Tailwind) frontend
+│   └── src/App.jsx         # client directory, build view, dashboard
+├── onboard.py              # one-command pipeline entry point, structured stage events
+├── api.py                  # FastAPI: build/status/profile/config/query/eval endpoints
+├── run_ingestion.py         # Week 1 checkpoint
+├── run_indexing.py          # Week 2 checkpoint
+├── run_week3_checkpoint.py  # Week 3 checkpoint
+├── run_eval_report.py       # Week 4 checkpoint
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
