@@ -42,7 +42,9 @@ class LLMClient:
             "https://api.groq.com/openai/v1/chat/completions",
             headers={"Authorization": f"Bearer {os.getenv('GROQ_API_KEY')}"},
             json={
-                "model": "llama-3.1-8b-instant",
+                # llama-3.1-8b-instant was deprecated by Groq on 2026-08-16;
+                # openai/gpt-oss-20b is their recommended replacement.
+                "model": "openai/gpt-oss-20b",
                 "messages": [{"role": "user", "content": prompt}],
                 "temperature": 0.1,
             },
