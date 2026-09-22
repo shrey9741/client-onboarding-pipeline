@@ -29,6 +29,7 @@ def run_customer_eval(customer_id: str, questions, llm_client) -> dict:
     for q in questions:
         rag_result = answer_question(q, index, vectorizer, metadata, llm_client=llm_client)
 
+
         eval_result = run_checks(
             question=q,
             answer=rag_result["answer"],
